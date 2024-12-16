@@ -14,6 +14,7 @@ function App() {
   const [transferAddress, setTransferAddress] = useState('');
   const [transferAmount, setTransferAmount] = useState('');
   const [bbwContract, setBBWContract] = useState(null);
+  const [usernameAddresses, setUsernameAddresses] = useState([]); // State for username/address list
 
   const bbwAddress = process.env.REACT_APP_BBW_ADDRESS;
 
@@ -23,6 +24,9 @@ function App() {
     } else {
       alert('Please install MetaMask to use this dApp!');
     }
+
+    // Fetch username/address data from your backend
+    fetchUsernamesAndAddresses();
   }, []);
 
   async function loadBlockchainData() {
@@ -50,6 +54,21 @@ function App() {
       setBalance(ethers.formatEther(userBalance));
     } catch (error) {
       console.error('Error loading blockchain data:', error);
+    }
+  }
+
+  async function fetchUsernamesAndAddresses() {
+    try {
+      // Replace with your actual Vercel API endpoint
+      const response = await fetch('https://your-vercel-app.vercel.app/api/data');
+      if (!response.ok) {
+        console.error('Failed to fetch username/address data:', response.status, response.statusText);
+        return;
+      }
+      const data = await response.json();
+      setUsernameAddresses(data);
+    } catch (error) {
+      console.error('Error fetching username/address data:', error);
     }
   }
 
@@ -82,7 +101,7 @@ function App() {
       <p className="text-center">Your Account: {account}</p>
       <p className="text-center">Your Balance: {balance} {tokenData.symbol}</p>
 
-      <div className="row justify-content-center">
+      <div className="row justify-content-center mb-5">
         <div className="col-md-12">
           <form onSubmit={transferTokens}>
             <div className="mb-3">
@@ -116,6 +135,32 @@ function App() {
               Transfer Tokens
             </button>
           </form>
+        </div>
+      </div>
+
+      <h2 className="text-center">Registered Usernames and Addresses</h2>
+      <div className="row justify-content-center">
+        <div className="col-md-8">
+          {usernameAddresses.length === 0 ? (
+            <p>No usernames/addresses have been registered yet.</p>
+          ) : (
+            <table className="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Address</th>
+                </tr>
+              </thead>
+              <tbody>
+                {usernameAddresses.map(({ username, address }) => (
+                  <tr key={username}>
+                    <td>{username}</td>
+                    <td>{address}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </div>
