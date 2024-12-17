@@ -59,18 +59,28 @@ function App() {
 
   async function fetchUsernamesAndAddresses() {
     try {
-      // Replace with your actual Vercel API endpoint
-      const response = await fetch('https://your-vercel-app.vercel.app/api/data');
+      // Ensure you have this token set in your environment, e.g., .env
+      // Remember: Variables must start with REACT_APP_ to be accessible in React
+      const token = process.env.REACT_APP_BLOB_READ_WRITE_TOKEN;
+  
+      const response = await fetch('https://wfe3buijfalvy7yy.public.blob.vercel-storage.com/data-XSQ5qoWMjeDUn6BPPpJLdpBUMzXovK.json', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
       if (!response.ok) {
         console.error('Failed to fetch username/address data:', response.status, response.statusText);
         return;
       }
+  
       const data = await response.json();
       setUsernameAddresses(data);
     } catch (error) {
       console.error('Error fetching username/address data:', error);
     }
   }
+  
 
   async function transferTokens(event) {
     event.preventDefault();
