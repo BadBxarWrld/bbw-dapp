@@ -8,7 +8,7 @@ initialize();
 async function initialize() {
   // Fetches an onramp session and captures the client secret
   const response = await fetch(
-    "https://dapp.badbxar.com/create-onramp-session",
+    "/create-onramp-session",
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
